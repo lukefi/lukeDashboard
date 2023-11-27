@@ -51,7 +51,8 @@ data _null_;
     put   '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>';
     put   '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css">';
     put   '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">';
-    put   '<link rel="stylesheet" href="https://raw.githubusercontent.com/lukefi/lukeDashboard/master/tt/customStyle.css">';
+    put   '<link rel="stylesheet" href="https://pasoneto.github.io/lukeDashboard/tt/customStyle.css">';
+
     put '</head>';
 
     put '<body>';
