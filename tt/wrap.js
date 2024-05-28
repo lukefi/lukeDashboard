@@ -59,6 +59,7 @@ if(kieli === 3){
   var logoURL = 'https://portal.mtt.fi/portal/page/portal/taloustohtori/Kuvat/Luke-economydoctor-213x150px.png'
 }
 
+
 //Initiating global variables
 var filteredDataForMap;
 var filteredData;
@@ -84,32 +85,55 @@ var labels = [{"dependentVariable": dependentLabels[0], "classifiers": classifie
 
 //Fixing not expanded data frame problem for omaluok
 if(false){
-var allMaakuntasSelected = Object.keys(labels[0]['subLabels'].maakunta).filter(i => i !== 'code')
-var problemExpanded = [];
+  var allMaakuntasSelected = Object.keys(labels[0]['subLabels'].maakunta).filter(i => i !== 'code')
+  var problemExpanded = [];
 
-var exampleRegion = problem[0].maakunta
-for(j in allMaakuntasSelected){
-  for(k in problem){
-    var pC = JSON.parse(JSON.stringify(problem[k]));
-    pC.maakunta = Number(allMaakuntasSelected[j])
-    problemExpanded.push(pC)
+  var exampleRegion = problem[0].maakunta
+  for(j in allMaakuntasSelected){
+    for(k in problem){
+      var pC = JSON.parse(JSON.stringify(problem[k]));
+      pC.maakunta = Number(allMaakuntasSelected[j])
+      problemExpanded.push(pC)
+    }
   }
-}
 
-function removeNonExample(i){
-  if(Number(i.maakunta) !== exampleRegion){
-    i.value = null;
+  function removeNonExample(i){
+    if(Number(i.maakunta) !== exampleRegion){
+      i.value = null;
+    }
+    return(i)
   }
-  return(i)
-}
 
-var problem = reshapeJSON(problemExpanded, initialClassifiers)
-var problem = problem.map(i => removeNonExample(i))
-var data = data.concat(problem);
+  var problem = reshapeJSON(problemExpanded, initialClassifiers)
+  var problem = problem.map(i => removeNonExample(i))
+  var data = data.concat(problem);
 }
 //End of fixing not expanded data frame problem for omaluok
 
+//Function to save graphs
+function saveChartWithBackground(chart) {
+    // Create a new canvas
+    const canvas = document.createElement('canvas');
+    canvas.width = document.getElementById(chart.chart.canvas.id).width;
+    canvas.height = document.getElementById(chart.chart.canvas.id).height;
+    const context = canvas.getContext('2d');
 
+    // Fill the background with a solid color
+    context.fillStyle = 'white'; // Change 'white' to any color you want as background
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw the chart on the new canvas
+    chart.options.legend.display = true //Ensure that lables are available in saved image
+    chart.options.animation = false;
+    chart.update();
+    context.drawImage(chart.chart.canvas, 0, 0);
+
+    // Create an image link and download the chart
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = 'chart.png';
+    link.click();
+}
 
 //Removing last -empty- character from alue
 var alue = alue.slice(0, -1)
@@ -205,8 +229,8 @@ function completeWrap(){
       var thousandSeparator = "de-DE"
     }
 
-    graph1 = SmartDasher.graphCustom(xAxis1, yAxis1, labels1, "myChart", "line", title1, showLegend = true, fill = false, suggestedMin = null, position = 'bottom', yAxisTitle = yAxisTitle, thousandSeparator = thousandSeparator)
-    graph2 = SmartDasher.graphCustom(xAxis2, yAxis2, labels2, "myChart1", "bar", title1, showLegend = true, fill = false, suggestedMin = null, position = 'bottom', yAxisTitle = yAxisTitle, thousandSeparator = thousandSeparator)
+    window.graph1 = SmartDasher.graphCustom(xAxis1, yAxis1, labels1, "myChart", "line", title1, showLegend = true, fill = false, suggestedMin = null, position = 'bottom', yAxisTitle = yAxisTitle, thousandSeparator = thousandSeparator)
+    window.graph2 = SmartDasher.graphCustom(xAxis2, yAxis2, labels2, "myChart1", "bar", title1, showLegend = true, fill = false, suggestedMin = null, position = 'bottom', yAxisTitle = yAxisTitle, thousandSeparator = thousandSeparator)
 
     console.log("Seeing pie charts")
     //Rendering up to 2 pieCharts
@@ -234,29 +258,17 @@ function completeWrap(){
     console.log("End of seeing pie charts")
 
     document.querySelectorAll("#downloadButton")[0].onclick = function(){
-      var a = document.createElement('a');
-      a.href = graph1.toBase64Image();
-      a.download = 'chart1.png';
-      a.click();
+      saveChartWithBackground(graph1);
     }
     document.querySelectorAll("#downloadButton")[1].onclick = function(){
-      var a = document.createElement('a');
-      a.href = graph2.toBase64Image();
-      a.download = 'chart2.png';
-      a.click();
+      saveChartWithBackground(graph2);
     }
     try{
       document.querySelectorAll("#downloadButton")[2].onclick = function(){
-        var a = document.createElement('a');
-        a.href = pie1.toBase64Image();
-        a.download = 'pie1.png';
-        a.click();
+        saveChartWithBackground(pie1);
       }
       document.querySelectorAll("#downloadButton")[3].onclick = function(){
-        var a = document.createElement('a');
-        a.href = pie2.toBase64Image();
-        a.download = 'pie2.png';
-        a.click();
+        saveChartWithBackground(pie2);
       }
     } catch(e){
       console.log("No pie charts to download")
@@ -301,7 +313,7 @@ function completeWrap(){
 
     var labels1 = labels1.map(i=>SmartDasher.shortenLabel(i, 19))
 
-    graph1 = SmartDasher.graphCustom(labels1, [yAxis1.map(i=> i[0])], '', "myChart", 'line', title1, showLegend=false)
+    window.graph1 = SmartDasher.graphCustom(labels1, [yAxis1.map(i=> i[0])], '', "myChart", 'line', title1, showLegend=false)
     
     //Rendering up to 3 pieCharts
     var pieColors = SmartDasher.colorGenerator(labels1)
@@ -326,22 +338,13 @@ function completeWrap(){
     }
 
     document.querySelectorAll("#downloadButton")[0].onclick = function(){
-      var a = document.createElement('a');
-      a.href = graph1.toBase64Image();
-      a.download = 'chart1.png';
-      a.click();
+      saveChartWithBackground(graph1);
     }
     document.querySelectorAll("#downloadButton")[1].onclick = function(){
-      var a = document.createElement('a');
-      a.href = pie1.toBase64Image();
-      a.download = 'pie1.png';
-      a.click();
+      saveChartWithBackground(pie1);
     }
     document.querySelectorAll("#downloadButton")[2].onclick = function(){
-      var a = document.createElement('a');
-      a.href = pie2.toBase64Image();
-      a.download = 'pie2.png';
-      a.click();
+      saveChartWithBackground(pie2);
     }
 
   } if(nMulticlassClassifiers < 1) {
@@ -379,7 +382,7 @@ function completeWrap(){
     //document.getElementById('selectedVariables').innerHTML = title1
 
     var xAxis1 = xAxis1.map(i=>SmartDasher.shortenLabel(i, 19))
-    graph1 = SmartDasher.graphCustom(xAxis1, yAxis1, labels1, "myChart", 'bar', title1)
+    window.graph1 = SmartDasher.graphCustom(xAxis1, yAxis1, labels1, "myChart", 'bar', title1)
 
     if(renderMap){
       //fillMapSelection(checkedValues, 'dropdown-content', labels, textTranslations)
@@ -394,10 +397,7 @@ function completeWrap(){
   }
 
   document.querySelectorAll("#downloadButton")[0].onclick = function(){
-    var a = document.createElement('a');
-    a.href = graph1.toBase64Image();
-    a.download = 'chart1.png';
-    a.click();
+    saveChartWithBackground(graph1);
   }
 
   SmartDasher.displayNonGraphs(window.filteredData, whereToAppend = "graphsContainer", textTranslations, language)

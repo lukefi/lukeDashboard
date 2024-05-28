@@ -1,17 +1,9 @@
-Understand all data visualization exitant in Luke;
+meetin arto - 1h
 
-How they work and who's behind it?
+background of saved charts not be transparent
+keskiarvo not translating
+how is map generated
+remove button back to table
+remove data from github
+pie chart. Negative values look weird
 
-Dissemination of information:
-ED, Luonnonvaratiedot, PxWebl pros and cons, options, business case for standardized;
-
-
-Kitta suhonen (IT in statutory services - public data -> Luonnontiedot; include pxWeb there? How was it implemented?);
-
-(Include ED on luonnontiedot?)
-
-Pokker (Luonnontiedot - why not?)
-
-Henri Näpärä (IT department);
-
-Toppi hänhella (IT director)
