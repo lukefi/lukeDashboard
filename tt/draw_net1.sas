@@ -70,6 +70,9 @@ data _null_;
     yksikkokieli="%yksikko&kieli";
     put 'var yksikkokieli="' yksikkokieli '"';
 
+    mTitle="%kscan(&&laskotsb&kieli,&tulostus,/)";
+    put 'var mTitle="' mTitle '"';
+
     harjonta = &hajonta;
     put 'var harjonta="' harjonta '"';
     akajanro = &jakajanro;

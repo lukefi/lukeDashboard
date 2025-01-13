@@ -4,6 +4,7 @@ var alue = "maakunta "
 var yksikkokieli = "Summa"
 var regionalClassifier = 2
 var jakajanro = 2
+var mTitle = "Farm productivity"
 var data =
 [
 {
